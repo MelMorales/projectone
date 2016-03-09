@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://code.jquery.com/jquery.js"></script> 
+</head>
+
+<style>
+
+h1 {
+    font-family: Courier;
+	padding-right: 30px;
+	padding-bottom: 30px;
+	padding-left: 50px;
+	font-size: 43px;
+	color: #e4f68f;
+}
+
+button {
+	padding-left: 50px;
+	}
+
+ul {
+    list-style: none;
+}
+
+li {
+    font-family: Verdana;
+    font-size: 2em;
+}
+input[type=radio] {
+    border: 0px;
+    width: 20px;
+    height: 2em;
+}
+
+p {
+    font-family: Verdana;
+    padding-left: 50px;
+}
+
+#header {
+ background-color: #e4f68f;
+    border-radius: 6px;
+    width: 75%;
+    margin: auto;
+    padding-top: 5px;
+background: beige;
+background-image: url("biblekidv2.jpg");
+border-radius: 10px;
+}
+
+#myDiv {
+ 	padding-left: 50px;
+    margin-bottom: 10px;
+    font-family: Verdana;
+    }
+
+/* Quiz Classes */
+ .quizContainer {
+    background-color: #50c19a;
+    border-radius: 6px;
+    width: 75%;
+    margin: auto;
+    padding-top: 16px;
+    position: relative;
+}
+
+
+.nextButton {
+    border-radius: 6px;
+    width: 150px;
+    height: 40px;
+    text-align: center;
+    background-color: #e4f68f;
+    /*clear: both;*/
+    color: #e62739;
+    font-family: Courier;
+    position: relative;
+    margin: auto;
+    padding-top: 23px;
+}
+.question {
+    font-family: Impact;
+    font-size: 2em;
+    width: 90%;
+    height: auto;
+    margin: auto;
+    border-radius: 6px;
+    background-color: #dddfd4;
+    text-align: center;
+}
+.quizMessage {
+    background-color: peachpuff;
+    border-radius: 6px;
+    width: 30%;
+    margin: auto;
+    text-align: center;
+    padding: 2px;
+    font-family: Verdana;
+    color: red;
+}
+.choiceList {
+    font-family: Verdana;
+    color: black;
+    font-size: 13px;
+}
+.result {
+    width: 30%;
+    height: auto;
+    border-radius: 6px;
+    background-color: linen;
+    margin: auto;
+    text-align: center;
+    font-family: Verdana;
+}
+
+body {
+background-color: #444036;
+}
+</style>
+
+<body>
+<div id="header"><!-- open header div -->
+<h1>Do you know Jesus?</h1>
+</div><!-- close header div -->
+    <div class="quizContainer">
+        <div class="question"></div>
+        <ul class="choiceList"></ul>
+        <div class="quizMessage"></div>
+        <div class="result"></div>
+        <div class="nextButton">Next Question</div>
+        <p>Give up? Keep trying but you can click the button for the answers or explanations!<button onclick="myFunction()">CLICK HERE!</button></p>
+        
+        <div id="myDiv">
+		</div><!--close myDiv-->
+<br>
+    </div><!--close main div--> 
+
+<script> 
+var questions = [{
+    question: "In the beginning, God created...",
+    choices: ["heaven and earth", "men and women", "night and day", "birds and bees"],
+    correctAnswer: 0
+}, {
+    question: "Who was instructed by God to build the ark?",
+    choices: ["Adam", "Noah", "Moses", "Cane"],
+    correctAnswer: 1
+}, {
+    question: "________ led the Israelites out of slavery.",
+    choices: ["Moses", "Abraham", "Abel", "Caesar"],
+    correctAnswer: 0
+    
+}, {
+    question: "What was the name of the angel that came to Mary to tell her about Jesus?",
+    choices: ["Gabriel", "John", "Matthew", "He never said his name."],
+    correctAnswer: 0
+    
+}, {
+    question: "Who baptized Jesus?",
+    choices: ["John the Baptist", "Paul", "Simon", "Mary"],
+    correctAnswer: 0
+    
+}, {
+    question: "How many disciples did Jesus have?",
+    choices: ["8", "10", "12", "No one knows."],
+    correctAnswer: 2
+    
+}, {
+    question: "What was Peter's other name?",
+    choices: ["Saul", "Simon", "Thomas", "He didn't have another name."],
+    correctAnswer: 1
+    
+}, {
+    question: "Jesus endured _____ days of temptation in the wilderness.",
+    choices: ["10", "20", "30", "40"],
+    correctAnswer: 3
+    
+}, {
+    question: "On the _____ day, Jesus ascended to Heaven.",
+    choices: ["first", "second", "third", "fourth"],
+    correctAnswer: 2
+    
+}, {
+    question: "What were the disciples filled with after Jesus' death?",
+    choices: ["hope", "fear", "doubt", "The Holy Spirit"],
+    correctAnswer: 3
+    
+}];
+
+var currentQuestion = 0;
+var correctAnswers = 0;
+var quizOver = false;
+
+$(document).ready(function () {
+
+    // Display the first question
+    displayCurrentQuestion();
+    $(this).find(".quizMessage").hide();
+
+    // On clicking next, display the next question
+    $(this).find(".nextButton").on("click", function () {
+        if (!quizOver) {
+
+            value = $("input[type='radio']:checked").val();
+
+            if (value == undefined) {
+                $(document).find(".quizMessage").text("Please select an answer");
+                $(document).find(".quizMessage").show();
+            } else {
+                // TODO: Remove any message -> not sure if this is efficient to call this each time....
+                $(document).find(".quizMessage").hide();
+
+                if (value == questions[currentQuestion].correctAnswer) {
+                    correctAnswers++;
+                }
+
+                currentQuestion++; // Since we have already displayed the first question on DOM ready
+                if (currentQuestion < questions.length) {
+                    displayCurrentQuestion();
+                } else {
+                    displayScore();
+                    //                    $(document).find(".nextButton").toggle();
+                    //                    $(document).find(".playAgainButton").toggle();
+                    // Change the text in the next button to ask if user wants to play again
+                    $(document).find(".nextButton").text("Play Again?");
+                    quizOver = true;
+                }
+            }
+        } else { // quiz is over and clicked the next button (which now displays 'Play Again?'
+            quizOver = false;
+            $(document).find(".nextButton").text("Next Question");
+            resetQuiz();
+            displayCurrentQuestion();
+            hideScore();
+        }
+    });
+
+});
+
+// This displays the current question AND the choices
+function displayCurrentQuestion() {
+
+    console.log("In display current Question");
+
+    var question = questions[currentQuestion].question;
+    var questionClass = $(document).find(".quizContainer > .question");
+    var choiceList = $(document).find(".quizContainer > .choiceList");
+    var numChoices = questions[currentQuestion].choices.length;
+
+    // Set the questionClass text to the current question
+    $(questionClass).text(question);
+
+    // Remove all current <li> elements (if any)
+    $(choiceList).find("li").remove();
+
+    var choice;
+    for (i = 0; i < numChoices; i++) {
+        choice = questions[currentQuestion].choices[i];
+        $('<li><input type="radio" value=' + i + ' name="dynradio" />' + choice + '</li>').appendTo(choiceList);
+    }
+}
+
+function resetQuiz() {
+    currentQuestion = 0;
+    correctAnswers = 0;
+    hideScore();
+}
+
+function displayScore() {
+    $(document).find(".quizContainer > .result").text("You scored: " + correctAnswers + " out of: " + questions.length);
+    $(document).find(".quizContainer > .result").show();
+}
+
+function hideScore() {
+    $(document).find(".result").hide();
+}
+
+function myFunction() {
+    var Q1 = "Q1: God created heaven and earth in the beginning. (Genesis 1:1) <br />";
+    var Q2 = "Q2: Noah was instructed by God to build the ark. (Genesis 7:1) <br />";
+    var Q3 = "Q3: Moses led the Israelites our of slavery. (Exodus 3:15) <br />";
+    var Q4 = "Q4: Gabriel came to Mary to tell her about Jesus. (Luke 1: 26-38) <br />";
+    var Q5 = "Q5: John the Baptist baptized Jesus. (Mark 1:9) <br />";
+    var Q6 = "Q6: Jesus had 12 disciples. (Matthew 10:1) <br />";
+    var Q7 = "Q7: Simon was Peter's other name. (Luke 6:14) <br />";
+    var Q8 = "Q8: Jesus endured 40 days of temptation in the wilderness. (Matthew 4:1-11) <br />";
+    var Q9 = "Q9: Jesus ascended to Heaven on the third day. (Luke 24) <br />";
+    var Q10 = "Q10: The disciples were filled with The Holy Spirit after Jesus' death. Acts 2:4) <br />";
+    document.getElementById("myDiv").innerHTML = Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7 + Q8 + Q9 + Q10;
+}
+
+</script>
+    
+</body>
+</html>
